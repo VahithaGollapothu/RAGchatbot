@@ -22,7 +22,20 @@ const app = express();
 // Security Middlewares
 app.use(helmet());
 app.use(cors({
-  origin: config.frontendUrl,
+  origin: function (origin, callback) {
+    // Allow server-to-server or tool requests (no origin header)
+    if (!origin) return callback(null, true);
+
+    const isLocalhost = origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1');
+    const isVercel = origin.endsWith('.vercel.app');
+    const isConfigured = origin === config.frontendUrl;
+
+    if (isLocalhost || isVercel || isConfigured) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
