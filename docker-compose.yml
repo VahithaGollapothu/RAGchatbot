@@ -45,7 +45,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_BACKEND_URL=http://localhost:5000
+        - VITE_BACKEND_URL=https://ragchatbot-6ib2.onrender.com
     container_name: gcet-frontend
     ports:
       - "5173:80"

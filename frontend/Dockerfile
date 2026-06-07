@@ -8,7 +8,7 @@ RUN npm ci
 COPY . .
 
 # Pass VITE_BACKEND_URL build argument
-ARG VITE_BACKEND_URL=http://localhost:5000
+ARG VITE_BACKEND_URL=https://ragchatbot-6ib2.onrender.com
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 
 RUN npm run build
