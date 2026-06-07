@@ -14,10 +14,14 @@ from chromadb.config import Settings
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer
+from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 import uvicorn
-import torch
-torch.set_num_threads(1)
+
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -25,9 +29,14 @@ logger = logging.getLogger(__name__)
 
 # ── Config ────────────────────────────────────────────────────────────────────
 COLLECTION_NAME = os.getenv("CHROMADB_COLLECTION", "college_knowledge")
-EMBEDDING_MODEL  = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 PERSIST_DIR      = os.getenv("CHROMA_PERSIST_DIR", "./chroma_data")
 PORT             = int(os.getenv("CHROMADB_PORT", 8001))
+
+# Chroma Cloud Config
+CHROMA_API_KEY  = os.getenv("CHROMA_API_KEY", None)
+CHROMA_TENANT   = os.getenv("CHROMA_TENANT", None)
+CHROMA_DATABASE = os.getenv("CHROMA_DATABASE", None)
+CHROMA_HOST     = os.getenv("CHROMA_HOST", None)
 
 # ── FastAPI App ───────────────────────────────────────────────────────────────
 app = FastAPI(title="ChromaDB RAG Service", version="1.0.0")
@@ -40,24 +49,38 @@ app.add_middleware(
 )
 
 # ── Globals (loaded on startup) ───────────────────────────────────────────────
-chroma_client: chromadb.PersistentClient = None
+chroma_client = None
 collection: chromadb.Collection = None
-embedder: SentenceTransformer = None
+embedding_function: ONNXMiniLM_L6_V2 = None
 
 
 @app.on_event("startup")
 async def startup():
-    global chroma_client, collection, embedder
-    logger.info(f"Loading embedding model: {EMBEDDING_MODEL}")
-    embedder = SentenceTransformer(EMBEDDING_MODEL)
+    global chroma_client, collection, embedding_function
+    logger.info("Initializing ONNX embedding function (all-MiniLM-L6-v2)...")
+    embedding_function = ONNXMiniLM_L6_V2()
 
-    logger.info(f"Connecting to ChromaDB (persist_dir={PERSIST_DIR})")
-    chroma_client = chromadb.PersistentClient(
-        path=PERSIST_DIR,
-        settings=Settings(anonymized_telemetry=False)
-    )
+    if CHROMA_API_KEY:
+        logger.info("Connecting to Chroma Cloud (TryChroma)...")
+        kwargs = {
+            "api_key": CHROMA_API_KEY,
+            "tenant": CHROMA_TENANT,
+            "database": CHROMA_DATABASE
+        }
+        if CHROMA_HOST:
+            kwargs["cloud_host"] = CHROMA_HOST
+        
+        chroma_client = chromadb.CloudClient(**kwargs)
+    else:
+        logger.info(f"Connecting to local ChromaDB (persist_dir={PERSIST_DIR})")
+        chroma_client = chromadb.PersistentClient(
+            path=PERSIST_DIR,
+            settings=Settings(anonymized_telemetry=False)
+        )
+
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME,
+        embedding_function=embedding_function,
         metadata={"hnsw:space": "cosine"}
     )
     logger.info(f"Collection '{COLLECTION_NAME}' ready. Documents: {collection.count()}")
@@ -96,13 +119,10 @@ async def ingest(req: IngestRequest):
     metas    = [d.get("metadata", {}) for d in req.documents]
     ids      = [str(uuid.uuid4()) for _ in req.documents]
 
-    logger.info(f"Embedding {len(texts)} chunks...")
-    embeddings = embedder.encode(texts, show_progress_bar=False).tolist()
-
+    logger.info(f"Adding {len(texts)} chunks to ChromaDB...")
     collection.add(
         ids=ids,
         documents=texts,
-        embeddings=embeddings,
         metadatas=metas,
     )
     logger.info(f"Ingested {len(texts)} chunks. Total: {collection.count()}")
@@ -115,10 +135,8 @@ async def query(req: QueryRequest):
     if collection.count() == 0:
         return {"results": [], "message": "No documents indexed yet"}
 
-    query_embedding = embedder.encode([req.query], show_progress_bar=False).tolist()
-
     kwargs: Dict[str, Any] = {
-        "query_embeddings": query_embedding,
+        "query_texts": [req.query],
         "n_results": min(req.top_k, collection.count()),
         "include": ["documents", "metadatas", "distances"],
     }
@@ -167,7 +185,7 @@ async def stats():
     return {
         "collection_name": COLLECTION_NAME,
         "total_chunks":    collection.count(),
-        "embedding_model": EMBEDDING_MODEL,
+        "embedding_model": "all-MiniLM-L6-v2 (ONNX)",
         "persist_dir":     PERSIST_DIR,
     }
 
@@ -179,6 +197,7 @@ async def reset():
     chroma_client.delete_collection(COLLECTION_NAME)
     collection = chroma_client.get_or_create_collection(
         name=COLLECTION_NAME,
+        embedding_function=embedding_function,
         metadata={"hnsw:space": "cosine"}
     )
     logger.info("Collection reset.")
@@ -220,12 +239,12 @@ async def upload_file(file: UploadFile = File(...), category: str = "general"):
     texts      = [c["text"] for c in chunks]
     metas      = [c["metadata"] for c in chunks]
     ids        = [str(uuid.uuid4()) for _ in chunks]
-    embeddings = embedder.encode(texts, show_progress_bar=False).tolist()
 
-    collection.add(ids=ids, documents=texts, embeddings=embeddings, metadatas=metas)
+    collection.add(ids=ids, documents=texts, metadatas=metas)
     return {"filename": file.filename, "chunks_ingested": len(chunks), "total_chunks": collection.count()}
 
 
 # ── Entry Point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=False)
+
