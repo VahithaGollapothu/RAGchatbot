@@ -22,7 +22,7 @@ module.exports = {
 
   // ChromaDB
   chroma: {
-    url:        process.env.CHROMADB_URL        || null,
+    url:        process.env.CHROMADB_URL        || process.env.CHROMA_URL || null,
     host:       process.env.CHROMADB_HOST       || '127.0.0.1',
     port:       parseInt(process.env.CHROMADB_PORT, 10) || 8001,
     collection: process.env.CHROMADB_COLLECTION || 'college_knowledge',
