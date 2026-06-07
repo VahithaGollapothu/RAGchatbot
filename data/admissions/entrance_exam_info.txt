@@ -1,0 +1,91 @@
+CATEGORY: Admissions
+DOCUMENT: Entrance Exam Information
+SOURCE: Office of Admissions, Greenfield College of Engineering and Technology
+
+=== ENTRANCE EXAM INFORMATION — GCET ADMISSIONS ===
+
+1. TNEA (Tamil Nadu Engineering Admissions)
+--------------------------------------------
+Conducting Body: Anna University, Chennai
+Type: Rank-based (No written exam; based on HSC marks)
+
+Calculation:
+  - Normalized HSC aggregate score in PCM
+  - Formula: (Physics + Chemistry + Mathematics) / 3 × weight factor
+  - Rank assigned based on normalized score
+
+Process:
+  - Register on tnea.ac.in
+  - Submit HSC marks
+  - Rank allocated
+  - Participate in online counseling
+
+Cutoff Trends (Approximate for GCET 2024):
+  - CSE: 155+ marks (out of 200)
+  - ECE: 145+ marks
+  - EEE: 140+ marks
+  - MECH: 130+ marks
+  - CIVIL: 125+ marks
+  - IT: 150+ marks
+  - AIDS: 152+ marks
+
+2. JEE MAIN (for NRI/Management Quota)
+----------------------------------------
+Conducting Body: National Testing Agency (NTA)
+Frequency: Twice a year (January and April sessions)
+Eligibility: 12th with PCM
+Exam Mode: Computer-based
+Duration: 3 hours
+Sections: Mathematics (30Q), Physics (30Q), Chemistry (30Q)
+Max Score: 300
+
+JEE Score Use at GCET:
+  - NRI Quota seats
+  - Management Quota (if TNEA rank insufficient)
+  - Scholarship basis for high scorers
+
+3. TANCET (Tamil Nadu Common Entrance Test)
+--------------------------------------------
+Conducting Body: Anna University, Chennai
+Programs: M.E./M.Tech, MBA, MCA
+
+TANCET M.E./M.Tech:
+  - Duration: 2 hours
+  - Sections: Engineering Mathematics, Basic Engineering & Sciences, Subject-specific
+  - Total: 100 marks
+
+TANCET MBA:
+  - Duration: 2 hours
+  - Sections: Data Sufficiency, Reading Comprehension, Verbal Ability, Quantitative Ability, Analytical Reasoning
+  - Total: 100 marks
+
+TANCET MCA:
+  - Duration: 2 hours
+  - Sections: Mathematics, Computer Awareness, Analytical Reasoning, Verbal Ability
+  - Total: 100 marks
+
+4. GATE (Graduate Aptitude Test in Engineering)
+-------------------------------------------------
+Conducting Body: IITs/IISc (rotational)
+Validity: 3 years
+Use at GCET: Priority in M.E./M.Tech merit list + scholarship benefits
+
+GATE Benefits at GCET:
+  - GATE scorers get first priority in PG admissions
+  - GATE Score > 500: 25% tuition fee waiver for M.E./M.Tech
+  - GATE Score > 600: Teaching Assistantship of Rs. 5000/month
+
+5. NATA (National Aptitude Test in Architecture)
+-------------------------------------------------
+Required For: B.Arch program
+Conducting Body: Council of Architecture (COA)
+Minimum Score: 80 out of 200 for eligibility
+
+6. PREPARATION TIPS
+---------------------
+  - For TNEA: Focus on PCM subjects in 12th standard; higher marks = better rank
+  - For TANCET: Practice previous year papers (available at tancet.annauniv.edu)
+  - For GATE: Refer standard textbooks + NPTEL online courses
+  - For JEE: Practice mock tests on NTA Abhyas app
+
+CONTACT: admissions@gcet.edu.in | www.gcet.edu.in/entrance-exams

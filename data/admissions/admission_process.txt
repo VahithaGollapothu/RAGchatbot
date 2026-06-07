@@ -1,0 +1,61 @@
+CATEGORY: Admissions
+DOCUMENT: Admission Process
+SOURCE: Office of Admissions, Greenfield College of Engineering and Technology
+
+=== ADMISSION PROCESS AT GREENFIELD COLLEGE OF ENGINEERING AND TECHNOLOGY ===
+
+1. OVERVIEW
+-----------
+Greenfield College of Engineering and Technology (GCET) follows a transparent and merit-based admission process for all its undergraduate (B.E./B.Tech) and postgraduate (M.E./M.Tech/MBA/MCA) programs. The process is governed by the rules and regulations set by the State Government, Anna University, and the All India Council for Technical Education (AICTE).
+
+2. UNDERGRADUATE ADMISSION (B.E./B.Tech)
+-----------------------------------------
+Step 1: Appear for qualifying examinations
+  - Candidates must complete 12th standard (HSC) with Physics, Chemistry, and Mathematics as core subjects.
+  - Minimum aggregate: 60% for General category, 55% for BC/OBC, 50% for SC/ST categories.
+  
+Step 2: Appear for entrance examinations
+  - Tamil Nadu Engineering Admissions (TNEA) conducted by Anna University.
+  - Admission is based on 12th marks normalized score for TNEA counseling.
+  - Candidates may also apply under JEE Main for NRI/Management quota seats.
+  
+Step 3: Register on the official TNEA portal
+  - Visit: tnea.ac.in
+  - Fill online application, upload documents, and pay registration fee of Rs. 500.
+  
+Step 4: Attend counseling
+  - First, Second, and Third round counseling sessions are held.
+  - Physical reporting at designated counseling centers is mandatory.
+  - Rank-based allocation of seats.
+  
+Step 5: Report to the college
+  - Produce original certificates for verification.
+  - Pay first-year tuition fee within 3 days of allotment.
+  - Complete enrollment formalities.
+
+3. POSTGRADUATE ADMISSION (M.E./M.Tech)
+-----------------------------------------
+  - TANCET (Tamil Nadu Common Entrance Test) score required.
+  - GATE score holders get priority in merit list.
+  - Direct admission possible through management quota for GATE qualified candidates.
+
+4. MBA/MCA ADMISSION
+---------------------
+  - TANCET MBA/MCA score required.
+  - Group discussion and personal interview conducted at the college.
+  - Final merit list prepared based on TANCET score (70%) + GD/PI (30%).
+
+5. IMPORTANT DATES (2025-2026 Academic Year)
+----------------------------------------------
+  - TNEA Registration Opens: April 15, 2025
+  - TNEA Counseling Round 1: July 1–10, 2025
+  - TNEA Counseling Round 2: July 20–28, 2025
+  - TNEA Counseling Round 3 (Spot): August 5–10, 2025
+  - Classes Commence: August 18, 2025
+  - Last Date for Enrollment: August 25, 2025
+
+6. CONTACT
+----------
+Admissions Office, Greenfield College of Engineering and Technology
+Phone: 044-27654321 | Email: admissions@gcet.edu.in
+Timing: Monday–Saturday, 9:00 AM – 5:00 PM
