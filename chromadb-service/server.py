@@ -16,6 +16,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 import uvicorn
+import torch
+torch.set_num_threads(1)
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")

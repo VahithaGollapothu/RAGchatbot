@@ -108,8 +108,8 @@ async function reindexDocuments(req, res, next) {
     }
 
     if (documentBatches.length > 0) {
-      // Send chunks in batches of 50 to avoid overloading
-      const batchSize = 50;
+      // Send chunks in batches of 10 to avoid memory overloading on Render Free Tier
+      const batchSize = 10;
       for (let i = 0; i < documentBatches.length; i += batchSize) {
         const batch = documentBatches.slice(i, i + batchSize);
         await chromaService.ingest(batch);
