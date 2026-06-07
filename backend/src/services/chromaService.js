@@ -11,7 +11,7 @@ class ChromaService {
     this.baseURL = url || `http://${config.chroma.host}:${config.chroma.port}`;
     this.client = axios.create({
       baseURL: this.baseURL,
-      timeout: 30000, // 30s timeout for slow embedding downloads
+      timeout: 120000, // 120s timeout for cold starts and ingestion
     });
   }
 
