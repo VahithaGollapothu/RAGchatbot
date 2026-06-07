@@ -1,0 +1,85 @@
+CATEGORY: Admissions
+DOCUMENT: Eligibility Criteria
+SOURCE: Office of Admissions, Greenfield College of Engineering and Technology
+
+=== ELIGIBILITY CRITERIA FOR ADMISSION — GCET ===
+
+1. B.E. / B.TECH PROGRAMS
+---------------------------
+Program: Computer Science and Engineering (CSE)
+Program: Electronics and Communication Engineering (ECE)
+Program: Electrical and Electronics Engineering (EEE)
+Program: Mechanical Engineering (MECH)
+Program: Civil Engineering (CIVIL)
+Program: Information Technology (IT)
+Program: Artificial Intelligence and Data Science (AIDS)
+
+Minimum Eligibility:
+  - Must have passed 10+2 or equivalent from a recognized board.
+  - Subjects: Physics, Chemistry, Mathematics (PCM) are mandatory.
+  - Minimum aggregate marks: 60% (General/OC), 55% (BC/MBC), 50% (SC/ST/SCA).
+  - No age limit for admission.
+  - Candidates appearing in 12th board exams are also eligible to apply provisionally.
+
+2. B.ARCH PROGRAM
+------------------
+  - 10+2 with Mathematics as a compulsory subject.
+  - Minimum 50% marks in aggregate.
+  - Must qualify NATA (National Aptitude Test in Architecture).
+  - JEE Paper 2 score also accepted.
+
+3. M.E. / M.TECH PROGRAMS
+---------------------------
+Program: Computer Science and Engineering
+Program: VLSI Design
+Program: Structural Engineering
+Program: Power Systems Engineering
+
+Minimum Eligibility:
+  - B.E./B.Tech in relevant discipline from a recognized university.
+  - Minimum CGPA of 6.5/10 or 60% aggregate marks.
+  - TANCET score mandatory for Tamil Nadu candidates.
+  - GATE score: Priority in merit list; additional scholarship benefits.
+
+4. MBA PROGRAM
+---------------
+  - Any bachelor's degree (minimum 3 years) from a recognized university.
+  - Minimum 50% aggregate marks.
+  - TANCET MBA / CAT / MAT / XAT score required.
+  - Work experience preferred but not mandatory.
+
+5. MCA PROGRAM
+---------------
+  - BCA / B.Sc Computer Science / B.Sc IT or any graduate with Mathematics at 10+2 or graduation level.
+  - Minimum 50% aggregate marks.
+  - TANCET MCA score required.
+
+6. LATERAL ENTRY (B.E./B.TECH — 2nd Year Direct Entry)
+--------------------------------------------------------
+  - Diploma holders in relevant branch from State Board of Technical Education.
+  - Minimum 60% marks in Diploma.
+  - B.Sc degree holders with Mathematics also eligible.
+  - Admission through TNEA Lateral Entry counseling.
+  - Seats: 20% of sanctioned intake (supernumerary seats).
+
+7. NRI / PIO / FOREIGN NATIONALS
+----------------------------------
+  - Eligible for NRI quota seats (up to 5% of intake).
+  - Equivalent qualification to 10+2 from their country.
+  - Minimum 60% marks or equivalent GPA.
+  - IELTS/TOEFL score required if medium of instruction was not English.
+  - Apply directly to: nri.admissions@gcet.edu.in
+
+8. PERSONS WITH DISABILITIES (PwD)
+-------------------------------------
+  - 5% horizontal reservation applicable.
+  - Must have minimum 40% disability certified by a recognized government hospital.
+  - Relaxation of 5% in minimum marks requirement.
+
+9. SPORTS QUOTA
+----------------
+  - National/State level sports achievements considered.
+  - Minimum 50% aggregate marks.
+  - Original certificates from Sports Authority must be submitted.
+
+CONTACT: admissions@gcet.edu.in | 044-27654321

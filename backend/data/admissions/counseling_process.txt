@@ -1,0 +1,86 @@
+CATEGORY: Admissions
+DOCUMENT: Counseling Process
+SOURCE: Office of Admissions, Greenfield College of Engineering and Technology
+
+=== COUNSELING PROCESS — GCET ADMISSIONS ===
+
+1. TNEA COUNSELING OVERVIEW
+-----------------------------
+TNEA Counseling is conducted entirely online by Anna University. Students don't need to visit Anna University for counseling — they participate from home.
+
+2. STEP-BY-STEP COUNSELING PROCESS
+-------------------------------------
+STEP 1: Registration & Payment
+  - Visit tnea.ac.in and register with your 12th mark details.
+  - Pay registration fee online: Rs. 500 (General), Rs. 250 (SC/ST)
+  - Upload required documents as PDF.
+
+STEP 2: Rank Publication
+  - TNEA publishes normalized rank based on HSC marks.
+  - Check rank on tnea.ac.in using your application number.
+
+STEP 3: Choice Filling (Online)
+  - Log in to TNEA portal during choice filling window.
+  - Add colleges and branches in order of preference (up to 50 choices).
+  - GCET College Code: TN-1075
+  - Save and lock choices before deadline.
+
+STEP 4: Seat Allotment
+  - Seats allotted based on rank, category, and preference order.
+  - Allotment letter downloadable from portal.
+
+STEP 5: Reporting to College
+  - Download and print allotment order.
+  - Report to GCET Admissions Office within deadline (3 working days).
+  - Bring all original documents.
+  - Pay first-year fees at the college fee counter.
+
+STEP 6: Enrollment Completion
+  - Receive Student ID Number.
+  - ID card issued within 3 working days.
+  - Classes begin as per schedule.
+
+3. CATEGORIES IN TNEA COUNSELING
+----------------------------------
+  - OC (Open Category / General): 30.5% seats
+  - BC: 26.5% seats
+  - BCM: 3.5% seats
+  - MBC/DNC: 20% seats
+  - SC: 15% seats
+  - SCA: 3% seats
+  - ST: 1% seats
+  - Government School Preference: 7.5% of seats reserved for government school students
+
+4. SPECIAL COUNSELING ROUNDS
+------------------------------
+Round 1: Main counseling (July)
+Round 2: Second counseling for unfilled seats (July)
+Round 3 (Spot Admission): For any remaining seats (August)
+  - Physical attendance at designated venue required for Spot Admission.
+  - Bring all original documents and DD for fee payment.
+
+5. WHAT HAPPENS IF YOU MISS THE DEADLINE?
+------------------------------------------
+  - Allotted seat is automatically cancelled.
+  - No re-allotment in the same round.
+  - Can participate in next round if available.
+  - Management quota seats may be available after all rounds.
+
+6. MANAGEMENT QUOTA COUNSELING (College-Level)
+------------------------------------------------
+  - 15% of seats filled through management quota.
+  - Contact GCET admissions office directly.
+  - Merit considered: HSC marks + JEE score (if available).
+  - No direct donation/capitation fee accepted (illegal).
+
+7. GCET COLLEGE INFORMATION FOR TNEA
+--------------------------------------
+  - College Code: TN-1075
+  - Affiliation: Anna University
+  - NAAC Grade: A (with CGPA 3.12)
+  - NBA Accredited Departments: CSE, ECE, EEE, MECH
+  - Total UG Intake: 600 seats
+  - NIRF Ranking: Top 150 Engineering Colleges in India
+
+HELPLINE: 1800-425-5999 (TNEA Toll-Free) | 044-27654321 (GCET Admissions)
+Email: admissions@gcet.edu.in

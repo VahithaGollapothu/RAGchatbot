@@ -60,7 +60,7 @@ async function listDocuments(req, res, next) {
 async function reindexDocuments(req, res, next) {
   try {
     logger.info('Initiating collection reindexing of /data directory...');
-    const dataDir = path.join(__dirname, '../../../data');
+    const dataDir = path.join(__dirname, '../../data');
     
     if (!fs.existsSync(dataDir)) {
       return res.status(400).json({ success: false, error: { message: 'Data directory does not exist' } });
