@@ -4,7 +4,11 @@ const logger = require('../utils/logger');
 
 class ChromaService {
   constructor() {
-    this.baseURL = config.chroma.url || `http://${config.chroma.host}:${config.chroma.port}`;
+    let url = config.chroma.url;
+    if (url && url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+    this.baseURL = url || `http://${config.chroma.host}:${config.chroma.port}`;
     this.client = axios.create({
       baseURL: this.baseURL,
       timeout: 30000, // 30s timeout for slow embedding downloads
