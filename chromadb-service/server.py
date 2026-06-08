@@ -14,6 +14,7 @@ import uuid
 import time
 import random
 import logging
+import gc
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 
@@ -70,6 +71,56 @@ def execute_with_retry(func, *args, **kwargs):
                 raise e
 
 
+class OptimizedONNXMiniLM_L6_V2(ONNXMiniLM_L6_V2):
+    """Subclass of ONNXMiniLM_L6_V2 that configures SessionOptions for minimal memory usage on CPU."""
+    @property
+    def model(self) -> Any:
+        if hasattr(self, "_model_cached"):
+            return self._model_cached
+
+        if self._preferred_providers is None or len(self._preferred_providers) == 0:
+            if len(self.ort.get_available_providers()) > 0:
+                logger.info(
+                    f"WARNING: No ONNX providers provided, defaulting to available providers: "
+                    f"{self.ort.get_available_providers()}"
+                )
+            self._preferred_providers = self.ort.get_available_providers()
+        elif not set(self._preferred_providers).issubset(
+            set(self.ort.get_available_providers())
+        ):
+            raise ValueError(
+                f"Preferred providers must be subset of available providers: {self.ort.get_available_providers()}"
+            )
+
+        # Configure session options for minimal memory usage
+        so = self.ort.SessionOptions()
+        so.log_severity_level = 3
+        so.graph_optimization_level = self.ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        
+        # Optimize memory usage
+        so.intra_op_num_threads = 1
+        so.inter_op_num_threads = 1
+        so.enable_cpu_mem_arena = False
+        so.enable_memory_pattern = False
+        
+        logger.info("Initializing optimized ONNX InferenceSession (minimal memory)...")
+
+        if (
+            self._preferred_providers
+            and "CoreMLExecutionProvider" in self._preferred_providers
+        ):
+            self._preferred_providers.remove("CoreMLExecutionProvider")
+
+        import os
+        model_path = os.path.join(self.DOWNLOAD_PATH, self.EXTRACTED_FOLDER_NAME, "model.onnx")
+        self._model_cached = self.ort.InferenceSession(
+            model_path,
+            providers=self._preferred_providers,
+            sess_options=so,
+        )
+        return self._model_cached
+
+
 # ── Config ────────────────────────────────────────────────────────────────────
 COLLECTION_NAME = os.getenv("CHROMADB_COLLECTION", "college_knowledge")
 PERSIST_DIR      = os.getenv("CHROMA_PERSIST_DIR", "./chroma_data")
@@ -94,14 +145,14 @@ app.add_middleware(
 # ── Globals (loaded on startup) ───────────────────────────────────────────────
 chroma_client = None
 collection: chromadb.Collection = None
-embedding_function: ONNXMiniLM_L6_V2 = None
+embedding_function: OptimizedONNXMiniLM_L6_V2 = None
 
 
 @app.on_event("startup")
 async def startup():
     global chroma_client, collection, embedding_function
-    logger.info("Initializing ONNX embedding function (all-MiniLM-L6-v2)...")
-    embedding_function = ONNXMiniLM_L6_V2()
+    logger.info("Initializing optimized ONNX embedding function (all-MiniLM-L6-v2)...")
+    embedding_function = OptimizedONNXMiniLM_L6_V2()
 
     if CHROMA_API_KEY:
         logger.info("Connecting to Chroma Cloud (TryChroma)...")
@@ -173,6 +224,7 @@ async def ingest(req: IngestRequest):
     )
     total_count = execute_with_retry(collection.count)
     logger.info(f"Ingested {len(texts)} chunks. Total: {total_count}")
+    gc.collect()
     return {"ingested": len(texts), "total_chunks": total_count}
 
 
@@ -293,6 +345,7 @@ async def upload_file(file: UploadFile = File(...), category: str = "general"):
 
     execute_with_retry(collection.add, ids=ids, documents=texts, metadatas=metas)
     total_count = execute_with_retry(collection.count)
+    gc.collect()
     return {"filename": file.filename, "chunks_ingested": len(chunks), "total_chunks": total_count}
 
 
