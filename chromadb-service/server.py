@@ -20,7 +20,9 @@ from typing import List, Optional, Dict, Any
 
 import chromadb
 from chromadb.config import Settings
+from chromadb.errors import ChromaError
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
@@ -53,8 +55,8 @@ def execute_with_retry(func, *args, **kwargs):
             is_429 = (
                 "429" in err_str or
                 "too many requests" in err_str or
+                (hasattr(e, "code") and ((callable(e.code) and e.code() == 429) or (not callable(e.code) and e.code == 429))) or
                 getattr(e, "status_code", None) == 429 or
-                getattr(e, "code", None) == 429 or
                 (hasattr(e, "response") and getattr(e.response, "status_code", None) == 429)
             )
             
@@ -141,6 +143,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(ChromaError)
+async def chroma_error_handler(request, exc: ChromaError):
+    status_code = exc.code() if callable(exc.code) else 500
+    logger.error(f"ChromaError raised by ChromaDB SDK: {exc} (status_code={status_code})")
+    return JSONResponse(
+        status_code=status_code,
+        content={"detail": str(exc), "error_class": exc.__class__.__name__}
+    )
 
 # ── Globals (loaded on startup) ───────────────────────────────────────────────
 chroma_client = None
