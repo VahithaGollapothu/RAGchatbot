@@ -110,8 +110,13 @@ async function reindexDocuments(req, res, next) {
     if (documentBatches.length > 0) {
       // Send chunks in batches of 50 to reduce HTTP round-trips (ONNX service is low-memory)
       const batchSize = 50;
+      const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       for (let i = 0; i < documentBatches.length; i += batchSize) {
         const batch = documentBatches.slice(i, i + batchSize);
+        if (i > 0) {
+          logger.info(`Pacing ingestion: waiting 500ms before ingesting batch starting at index ${i}...`);
+          await delay(500);
+        }
         await chromaService.ingest(batch);
       }
     }

@@ -61,8 +61,6 @@ const DashboardPage = () => {
       if (analyticsRes.success) setStats(analyticsRes.data);
       if (docsRes.success) setDocuments(docsRes.data.documents || []);
       if (healthRes.success && healthRes.data.components.chromadb === 'UP') {
-        // Fetch stats directly
-        const chromaStats = await api.fetch('/api/documents');
         setDbStats({
           totalChunks: docsRes.data.total_chunks || 0,
           totalDocs: docsRes.data.documents?.length || 0,

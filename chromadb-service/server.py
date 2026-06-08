@@ -11,6 +11,8 @@ os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
 import uuid
+import time
+import random
 import logging
 from pathlib import Path
 from typing import List, Optional, Dict, Any
@@ -32,6 +34,41 @@ load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
+
+
+def execute_with_retry(func, *args, **kwargs):
+    """Executes a function with exponential backoff retries on 429 rate limit exceptions."""
+    max_retries = 5
+    initial_backoff = 1.0
+    backoff_factor = 2.0
+    retries = 0
+    backoff = initial_backoff
+    
+    while True:
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            err_str = str(e).lower()
+            is_429 = (
+                "429" in err_str or
+                "too many requests" in err_str or
+                getattr(e, "status_code", None) == 429 or
+                getattr(e, "code", None) == 429 or
+                (hasattr(e, "response") and getattr(e.response, "status_code", None) == 429)
+            )
+            
+            if is_429 and retries < max_retries:
+                sleep_time = backoff + random.uniform(0, 0.5)
+                logger.warning(
+                    f"ChromaDB 429 Rate Limit encountered. Retrying {func.__name__} in {sleep_time:.2f}s... "
+                    f"(Attempt {retries + 1}/{max_retries})"
+                )
+                time.sleep(sleep_time)
+                retries += 1
+                backoff *= backoff_factor
+            else:
+                raise e
+
 
 # ── Config ────────────────────────────────────────────────────────────────────
 COLLECTION_NAME = os.getenv("CHROMADB_COLLECTION", "college_knowledge")
@@ -84,12 +121,14 @@ async def startup():
             settings=Settings(anonymized_telemetry=False)
         )
 
-    collection = chroma_client.get_or_create_collection(
+    collection = execute_with_retry(
+        chroma_client.get_or_create_collection,
         name=COLLECTION_NAME,
         embedding_function=embedding_function,
         metadata={"hnsw:space": "cosine"}
     )
-    logger.info(f"Collection '{COLLECTION_NAME}' ready. Documents: {collection.count()}")
+    doc_count = execute_with_retry(collection.count)
+    logger.info(f"Collection '{COLLECTION_NAME}' ready. Documents: {doc_count}")
 
 
 # ── Pydantic Models ───────────────────────────────────────────────────────────
@@ -111,7 +150,7 @@ class DeleteRequest(BaseModel):
 
 @app.get("/health")
 async def health():
-    count = collection.count() if collection else 0
+    count = execute_with_retry(collection.count) if collection else 0
     return {"status": "ok", "collection": COLLECTION_NAME, "document_chunks": count}
 
 
@@ -126,30 +165,33 @@ async def ingest(req: IngestRequest):
     ids      = [str(uuid.uuid4()) for _ in req.documents]
 
     logger.info(f"Adding {len(texts)} chunks to ChromaDB...")
-    collection.add(
+    execute_with_retry(
+        collection.add,
         ids=ids,
         documents=texts,
         metadatas=metas,
     )
-    logger.info(f"Ingested {len(texts)} chunks. Total: {collection.count()}")
-    return {"ingested": len(texts), "total_chunks": collection.count()}
+    total_count = execute_with_retry(collection.count)
+    logger.info(f"Ingested {len(texts)} chunks. Total: {total_count}")
+    return {"ingested": len(texts), "total_chunks": total_count}
 
 
 @app.post("/query")
 async def query(req: QueryRequest):
     """Semantic similarity search."""
-    if collection.count() == 0:
+    total_count = execute_with_retry(collection.count)
+    if total_count == 0:
         return {"results": [], "message": "No documents indexed yet"}
 
     kwargs: Dict[str, Any] = {
         "query_texts": [req.query],
-        "n_results": min(req.top_k, collection.count()),
+        "n_results": min(req.top_k, total_count),
         "include": ["documents", "metadatas", "distances"],
     }
     if req.where:
         kwargs["where"] = req.where
 
-    results = collection.query(**kwargs)
+    results = execute_with_retry(collection.query, **kwargs)
 
     formatted = []
     for i in range(len(results["ids"][0])):
@@ -166,10 +208,11 @@ async def query(req: QueryRequest):
 @app.get("/documents")
 async def list_documents():
     """List all unique document names and categories."""
-    if collection.count() == 0:
+    total_count = execute_with_retry(collection.count)
+    if total_count == 0:
         return {"documents": [], "total_chunks": 0}
 
-    all_data = collection.get(include=["metadatas"])
+    all_data = execute_with_retry(collection.get, include=["metadatas"])
     seen = {}
     for meta in all_data["metadatas"]:
         key = meta.get("doc_name", "unknown")
@@ -182,15 +225,16 @@ async def list_documents():
             }
         seen[key]["chunks"] += 1
 
-    return {"documents": list(seen.values()), "total_chunks": collection.count()}
+    return {"documents": list(seen.values()), "total_chunks": total_count}
 
 
 @app.get("/stats")
 async def stats():
     """Collection statistics."""
+    total_count = execute_with_retry(collection.count)
     return {
         "collection_name": COLLECTION_NAME,
-        "total_chunks":    collection.count(),
+        "total_chunks":    total_count,
         "embedding_model": "all-MiniLM-L6-v2 (ONNX)",
         "persist_dir":     PERSIST_DIR,
     }
@@ -200,8 +244,9 @@ async def stats():
 async def reset():
     """Delete all documents from the collection."""
     global collection
-    chroma_client.delete_collection(COLLECTION_NAME)
-    collection = chroma_client.get_or_create_collection(
+    execute_with_retry(chroma_client.delete_collection, COLLECTION_NAME)
+    collection = execute_with_retry(
+        chroma_client.get_or_create_collection,
         name=COLLECTION_NAME,
         embedding_function=embedding_function,
         metadata={"hnsw:space": "cosine"}
@@ -246,8 +291,9 @@ async def upload_file(file: UploadFile = File(...), category: str = "general"):
     metas      = [c["metadata"] for c in chunks]
     ids        = [str(uuid.uuid4()) for _ in chunks]
 
-    collection.add(ids=ids, documents=texts, metadatas=metas)
-    return {"filename": file.filename, "chunks_ingested": len(chunks), "total_chunks": collection.count()}
+    execute_with_retry(collection.add, ids=ids, documents=texts, metadatas=metas)
+    total_count = execute_with_retry(collection.count)
+    return {"filename": file.filename, "chunks_ingested": len(chunks), "total_chunks": total_count}
 
 
 # ── Entry Point ───────────────────────────────────────────────────────────────
